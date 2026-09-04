@@ -58,12 +58,23 @@ public class jugadorControlador {
                     }
                 });
 
+        cargarRoles();
         cargarJugadores();
 
+        vista.setLocationRelativeTo(null);
         vista.setVisible(true);
     }
 
+    private void cargarRoles() {
+
+        vista.setCmbRol("Seleccione...");
+    }
+
     public void cargarJugadores() {
+
+        if (modelo == null) {
+            modelo = new Jugador();
+        }
 
         modelo.listarJugadores(
                 vista.getTblJugadores()
@@ -95,20 +106,23 @@ public class jugadorControlador {
         String rol =
                 vista.getCmbRol();
 
-        if (rol != null) {
-            rol = rol.trim();
+        if (rol == null) {
+            rol = "";
         }
+
+        rol = rol.trim();
 
         if (nickname.isEmpty()
                 || nombreReal.isEmpty()
                 || fechaTexto.isEmpty()
-                || rol == null
                 || rol.isEmpty()
                 || rol.equalsIgnoreCase("Seleccione...")) {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Todos los campos son obligatorios."
+                    "Todos los campos son obligatorios.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -118,7 +132,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "El nickname solo puede contener letras, números, guion y guion bajo."
+                    "El nickname solo puede contener letras, números, guion y guion bajo.",
+                    "Nickname incorrecto",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -128,7 +144,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "El nombre solo puede contener letras y espacios."
+                    "El nombre solo puede contener letras y espacios.",
+                    "Nombre incorrecto",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -145,7 +163,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "La fecha debe tener el formato yyyy-MM-dd."
+                    "La fecha debe tener el formato yyyy-MM-dd.",
+                    "Fecha incorrecta",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -166,7 +186,9 @@ public class jugadorControlador {
 
                     JOptionPane.showMessageDialog(
                             vista,
-                            "El ID del equipo debe ser válido."
+                            "El ID del equipo debe ser válido.",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE
                     );
 
                     return;
@@ -176,32 +198,48 @@ public class jugadorControlador {
 
                 JOptionPane.showMessageDialog(
                         vista,
-                        "El ID del equipo debe ser un número."
+                        "El ID del equipo debe ser un número.",
+                        "Error",
+                        JOptionPane.WARNING_MESSAGE
                 );
 
                 return;
             }
         }
 
-        modelo =
-                new Jugador(
-                        nickname,
-                        nombreReal,
-                        fechaNacimiento,
-                        rol,
-                        idEquipo
-                );
+        try {
 
-        modelo.insertarJugador();
+            modelo =
+                    new Jugador(
+                            nickname,
+                            nombreReal,
+                            fechaNacimiento,
+                            rol,
+                            idEquipo
+                    );
 
-        cargarJugadores();
+            modelo.insertarJugador();
 
-        limpiarCampos();
+            cargarJugadores();
+            limpiarCampos();
 
-        JOptionPane.showMessageDialog(
-                vista,
-                "Jugador registrado correctamente."
-        );
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Jugador registrado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Error al registrar jugador:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     public void seleccionarJugador() {
@@ -214,65 +252,78 @@ public class jugadorControlador {
             return;
         }
 
-        idJugadorSeleccionado =
-                Integer.parseInt(
-                        vista.getTblJugadores()
-                                .getValueAt(
-                                        fila,
-                                        0
-                                )
-                                .toString()
-                );
+        try {
 
-        Object nickname =
-                vista.getTblJugadores()
-                        .getValueAt(fila, 1);
+            idJugadorSeleccionado =
+                    Integer.parseInt(
+                            vista.getTblJugadores()
+                                    .getValueAt(
+                                            fila,
+                                            0
+                                    )
+                                    .toString()
+                    );
 
-        Object nombreReal =
-                vista.getTblJugadores()
-                        .getValueAt(fila, 2);
+            Object nickname =
+                    vista.getTblJugadores()
+                            .getValueAt(fila, 1);
 
-        Object fecha =
-                vista.getTblJugadores()
-                        .getValueAt(fila, 3);
+            Object nombreReal =
+                    vista.getTblJugadores()
+                            .getValueAt(fila, 2);
 
-        Object rol =
-                vista.getTblJugadores()
-                        .getValueAt(fila, 4);
+            Object fecha =
+                    vista.getTblJugadores()
+                            .getValueAt(fila, 3);
 
-        Object equipo =
-                vista.getTblJugadores()
-                        .getValueAt(fila, 5);
+            Object rol =
+                    vista.getTblJugadores()
+                            .getValueAt(fila, 4);
 
-        vista.setTxtNickname(
-                nickname == null
-                        ? ""
-                        : nickname.toString()
-        );
+            Object equipo =
+                    vista.getTblJugadores()
+                            .getValueAt(fila, 5);
 
-        vista.setTxtNombreReal(
-                nombreReal == null
-                        ? ""
-                        : nombreReal.toString()
-        );
+            vista.setTxtNickname(
+                    nickname == null
+                            ? ""
+                            : nickname.toString()
+            );
 
-        vista.setTxtFechaNacimiento(
-                fecha == null
-                        ? ""
-                        : fecha.toString()
-        );
+            vista.setTxtNombreReal(
+                    nombreReal == null
+                            ? ""
+                            : nombreReal.toString()
+            );
 
-        vista.setCmbRol(
-                rol == null
-                        ? "Seleccione..."
-                        : rol.toString()
-        );
+            vista.setTxtFechaNacimiento(
+                    fecha == null
+                            ? ""
+                            : fecha.toString()
+            );
 
-        vista.setTxtIdEquipo(
-                equipo == null
-                        ? ""
-                        : equipo.toString()
-        );
+            vista.setCmbRol(
+                    rol == null
+                            ? "Seleccione..."
+                            : rol.toString()
+            );
+
+            vista.setTxtIdEquipo(
+                    equipo == null
+                            ? ""
+                            : equipo.toString()
+            );
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Error al seleccionar jugador:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     public void modificarJugador() {
@@ -281,7 +332,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Seleccione un jugador de la tabla."
+                    "Seleccione un jugador de la tabla.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -310,20 +363,23 @@ public class jugadorControlador {
         String rol =
                 vista.getCmbRol();
 
-        if (rol != null) {
-            rol = rol.trim();
+        if (rol == null) {
+            rol = "";
         }
+
+        rol = rol.trim();
 
         if (nickname.isEmpty()
                 || nombreReal.isEmpty()
                 || fechaTexto.isEmpty()
-                || rol == null
                 || rol.isEmpty()
                 || rol.equalsIgnoreCase("Seleccione...")) {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Todos los campos son obligatorios."
+                    "Todos los campos son obligatorios.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -333,7 +389,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "El nickname no es válido."
+                    "El nickname no es válido.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -343,7 +401,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "El nombre no es válido."
+                    "El nombre no es válido.",
+                    "Error",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -360,7 +420,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "La fecha debe tener el formato yyyy-MM-dd."
+                    "La fecha debe tener el formato yyyy-MM-dd.",
+                    "Fecha incorrecta",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -381,7 +443,9 @@ public class jugadorControlador {
 
                     JOptionPane.showMessageDialog(
                             vista,
-                            "El ID del equipo debe ser válido."
+                            "El ID del equipo debe ser válido.",
+                            "Error",
+                            JOptionPane.WARNING_MESSAGE
                     );
 
                     return;
@@ -391,7 +455,9 @@ public class jugadorControlador {
 
                 JOptionPane.showMessageDialog(
                         vista,
-                        "El ID del equipo debe ser un número."
+                        "El ID del equipo debe ser un número.",
+                        "Error",
+                        JOptionPane.WARNING_MESSAGE
                 );
 
                 return;
@@ -410,23 +476,37 @@ public class jugadorControlador {
             return;
         }
 
-        modelo.modificarJugador(
-                idJugadorSeleccionado,
-                nickname,
-                nombreReal,
-                fechaNacimiento,
-                rol,
-                idEquipo
-        );
+        try {
 
-        cargarJugadores();
+            modelo.modificarJugador(
+                    idJugadorSeleccionado,
+                    nickname,
+                    nombreReal,
+                    fechaNacimiento,
+                    rol,
+                    idEquipo
+            );
 
-        limpiarCampos();
+            cargarJugadores();
+            limpiarCampos();
 
-        JOptionPane.showMessageDialog(
-                vista,
-                "Jugador modificado correctamente."
-        );
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Jugador modificado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Error al modificar jugador:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     public void inhabilitarJugador() {
@@ -435,7 +515,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Seleccione un jugador de la tabla."
+                    "Seleccione un jugador de la tabla.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -453,18 +535,32 @@ public class jugadorControlador {
             return;
         }
 
-        modelo.inhabilitarJugador(
-                idJugadorSeleccionado
-        );
+        try {
 
-        cargarJugadores();
+            modelo.inhabilitarJugador(
+                    idJugadorSeleccionado
+            );
 
-        limpiarCampos();
+            cargarJugadores();
+            limpiarCampos();
 
-        JOptionPane.showMessageDialog(
-                vista,
-                "Jugador inhabilitado correctamente."
-        );
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Jugador inhabilitado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Error al inhabilitar jugador:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     public void habilitarJugador() {
@@ -473,7 +569,9 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Seleccione un jugador de la tabla."
+                    "Seleccione un jugador de la tabla.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -491,18 +589,32 @@ public class jugadorControlador {
             return;
         }
 
-        modelo.habilitarJugador(
-                idJugadorSeleccionado
-        );
+        try {
 
-        cargarJugadores();
+            modelo.habilitarJugador(
+                    idJugadorSeleccionado
+            );
 
-        limpiarCampos();
+            cargarJugadores();
+            limpiarCampos();
 
-        JOptionPane.showMessageDialog(
-                vista,
-                "Jugador habilitado correctamente."
-        );
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Jugador habilitado correctamente.",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Error al habilitar jugador:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
     private void limpiarCampos() {
@@ -514,18 +626,17 @@ public class jugadorControlador {
         vista.setCmbRol("Seleccione...");
 
         idJugadorSeleccionado = -1;
+        vista.getTblJugadores().clearSelection();
     }
 
-    private boolean validarNickname(
-            String nickname) {
+    private boolean validarNickname(String nickname) {
 
         return nickname.matches(
                 "[a-zA-Z0-9_-]+"
         );
     }
 
-    private boolean validarNombre(
-            String nombre) {
+    private boolean validarNombre(String nombre) {
 
         return nombre.matches(
                 "[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]+"
@@ -541,4 +652,3 @@ public class jugadorControlador {
         }
     }
 }
-

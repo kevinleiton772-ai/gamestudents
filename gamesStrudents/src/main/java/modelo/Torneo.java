@@ -339,4 +339,44 @@ public class Torneo {
             );
         }
     }
+    
+    public java.util.ArrayList<String[]> listarTorneosCombo() {
+
+    java.util.ArrayList<String[]> lista =
+            new java.util.ArrayList<>();
+
+    String sql =
+            "{CALL gamestudents.sp_listar_torneos()}";
+
+    ConexionBDD conexion =
+            new ConexionBDD();
+
+    try (
+            Connection con = conexion.conectar();
+            CallableStatement cs = con.prepareCall(sql);
+            ResultSet rs = cs.executeQuery()
+    ) {
+
+        while (rs.next()) {
+
+            String[] torneo = new String[2];
+
+            torneo[0] =
+                    String.valueOf(
+                            rs.getInt("id_torneo")
+                    );
+
+            torneo[1] =
+                    rs.getString("nombre");
+
+            lista.add(torneo);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return lista;
+}
+
 }

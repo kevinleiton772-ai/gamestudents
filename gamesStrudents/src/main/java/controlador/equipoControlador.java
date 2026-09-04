@@ -60,14 +60,11 @@ public class equipoControlador {
 
         cargarEquipos();
 
+        vista.setLocationRelativeTo(null);
         vista.setVisible(true);
     }
 
     public void cargarEquipos() {
-
-        if (modelo == null) {
-            modelo = new Equipo();
-        }
 
         modelo.listarEquipos(
                 vista.getTblEquipos()
@@ -109,7 +106,9 @@ public class equipoControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Todos los campos son obligatorios."
+                    "Todos los campos son obligatorios.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -120,23 +119,29 @@ public class equipoControlador {
         try {
 
             codigo =
-                    Integer.parseInt(codigoTexto);
+                    Integer.parseInt(
+                            codigoTexto
+                    );
+
+            if (codigo <= 0) {
+
+                JOptionPane.showMessageDialog(
+                        vista,
+                        "El código debe ser mayor que cero.",
+                        "Código incorrecto",
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+                return;
+            }
 
         } catch (NumberFormatException e) {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "El código debe ser un número."
-            );
-
-            return;
-        }
-
-        if (codigo <= 0) {
-
-            JOptionPane.showMessageDialog(
-                    vista,
-                    "El código debe ser mayor que cero."
+                    "El código debe ser un número.",
+                    "Código incorrecto",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -147,25 +152,30 @@ public class equipoControlador {
         try {
 
             fechaFundacion =
-                    LocalDate.parse(fechaTexto);
+                    LocalDate.parse(
+                            fechaTexto
+                    );
 
         } catch (Exception e) {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "La fecha debe tener el formato yyyy-MM-dd."
+                    "La fecha debe tener el formato yyyy-MM-dd.",
+                    "Fecha incorrecta",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
         }
 
-        modelo = new Equipo(
-                codigo,
-                nombre,
-                paisProcedencia,
-                fechaFundacion,
-                entrenador
-        );
+        modelo =
+                new Equipo(
+                        codigo,
+                        nombre,
+                        paisProcedencia,
+                        fechaFundacion,
+                        entrenador
+                );
 
         modelo.insertarEquipo();
 
@@ -175,7 +185,9 @@ public class equipoControlador {
 
         JOptionPane.showMessageDialog(
                 vista,
-                "Equipo registrado correctamente."
+                "Equipo registrado correctamente.",
+                "Equipo",
+                JOptionPane.INFORMATION_MESSAGE
         );
     }
 
@@ -189,45 +201,81 @@ public class equipoControlador {
             return;
         }
 
-        Object codigo =
-                vista.getTblEquipos()
-                        .getValueAt(fila, 0);
+        try {
 
-        if (codigo == null) {
+            codigoEquipoSeleccionado =
+                    Integer.parseInt(
+                            vista.getTblEquipos()
+                                    .getValueAt(
+                                            fila,
+                                            0
+                                    )
+                                    .toString()
+                    );
+
+        } catch (Exception e) {
+
+            codigoEquipoSeleccionado = -1;
+
             return;
         }
 
-        codigoEquipoSeleccionado =
-                Integer.parseInt(
-                        codigo.toString()
-                );
+        Object nombre =
+                vista.getTblEquipos()
+                        .getValueAt(
+                                fila,
+                                1
+                        );
+
+        Object pais =
+                vista.getTblEquipos()
+                        .getValueAt(
+                                fila,
+                                2
+                        );
+
+        Object fecha =
+                vista.getTblEquipos()
+                        .getValueAt(
+                                fila,
+                                3
+                        );
+
+        Object entrenador =
+                vista.getTblEquipos()
+                        .getValueAt(
+                                fila,
+                                4
+                        );
 
         vista.setTxtCodigo(
-                codigo.toString()
+                String.valueOf(
+                        codigoEquipoSeleccionado
+                )
         );
 
         vista.setTxtNombre(
-                vista.getTblEquipos()
-                        .getValueAt(fila, 1)
-                        .toString()
+                nombre == null
+                        ? ""
+                        : nombre.toString()
         );
 
         vista.setTxtPaisProcedencia(
-                vista.getTblEquipos()
-                        .getValueAt(fila, 2)
-                        .toString()
+                pais == null
+                        ? ""
+                        : pais.toString()
         );
 
         vista.setTxtFechaFundacion(
-                vista.getTblEquipos()
-                        .getValueAt(fila, 3)
-                        .toString()
+                fecha == null
+                        ? ""
+                        : fecha.toString()
         );
 
         vista.setTxtEntrenador(
-                vista.getTblEquipos()
-                        .getValueAt(fila, 4)
-                        .toString()
+                entrenador == null
+                        ? ""
+                        : entrenador.toString()
         );
     }
 
@@ -237,16 +285,13 @@ public class equipoControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Seleccione un equipo de la tabla."
+                    "Seleccione un equipo de la tabla.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
         }
-
-        String codigoTexto =
-                vista.getTxtCodigo()
-                        .getText()
-                        .trim();
 
         String nombre =
                 vista.getTxtNombre()
@@ -268,32 +313,16 @@ public class equipoControlador {
                         .getText()
                         .trim();
 
-        if (codigoTexto.isEmpty()
-                || nombre.isEmpty()
+        if (nombre.isEmpty()
                 || paisProcedencia.isEmpty()
                 || fechaTexto.isEmpty()
                 || entrenador.isEmpty()) {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Todos los campos son obligatorios."
-            );
-
-            return;
-        }
-
-        int codigo;
-
-        try {
-
-            codigo =
-                    Integer.parseInt(codigoTexto);
-
-        } catch (NumberFormatException e) {
-
-            JOptionPane.showMessageDialog(
-                    vista,
-                    "El código debe ser un número."
+                    "Todos los campos son obligatorios.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -304,13 +333,17 @@ public class equipoControlador {
         try {
 
             fechaFundacion =
-                    LocalDate.parse(fechaTexto);
+                    LocalDate.parse(
+                            fechaTexto
+                    );
 
         } catch (Exception e) {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "La fecha debe tener el formato yyyy-MM-dd."
+                    "La fecha debe tener el formato yyyy-MM-dd.",
+                    "Fecha incorrecta",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -328,27 +361,37 @@ public class equipoControlador {
             return;
         }
 
-        if (modelo == null) {
-            modelo = new Equipo();
+        boolean actualizado =
+                modelo.modificarEquipo(
+                        codigoEquipoSeleccionado,
+                        nombre,
+                        paisProcedencia,
+                        fechaFundacion,
+                        entrenador
+                );
+
+        if (actualizado) {
+
+            cargarEquipos();
+
+            limpiarCampos();
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Equipo modificado correctamente.",
+                    "Equipo",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+        } else {
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "No se pudo modificar el equipo.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
-
-        modelo.modificarEquipo(
-                codigoEquipoSeleccionado,
-                codigo,
-                nombre,
-                paisProcedencia,
-                fechaFundacion,
-                entrenador
-        );
-
-        cargarEquipos();
-
-        limpiarCampos();
-
-        JOptionPane.showMessageDialog(
-                vista,
-                "Equipo modificado correctamente."
-        );
     }
 
     public void inhabilitarEquipo() {
@@ -357,7 +400,9 @@ public class equipoControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Seleccione un equipo de la tabla."
+                    "Seleccione un equipo de la tabla.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -375,10 +420,6 @@ public class equipoControlador {
             return;
         }
 
-        if (modelo == null) {
-            modelo = new Equipo();
-        }
-
         modelo.inhabilitarEquipo(
                 codigoEquipoSeleccionado
         );
@@ -389,7 +430,9 @@ public class equipoControlador {
 
         JOptionPane.showMessageDialog(
                 vista,
-                "Equipo inhabilitado correctamente."
+                "Equipo inhabilitado correctamente.",
+                "Equipo",
+                JOptionPane.INFORMATION_MESSAGE
         );
     }
 
@@ -399,7 +442,9 @@ public class equipoControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Seleccione un equipo de la tabla."
+                    "Seleccione un equipo de la tabla.",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE
             );
 
             return;
@@ -417,10 +462,6 @@ public class equipoControlador {
             return;
         }
 
-        if (modelo == null) {
-            modelo = new Equipo();
-        }
-
         modelo.habilitarEquipo(
                 codigoEquipoSeleccionado
         );
@@ -431,7 +472,9 @@ public class equipoControlador {
 
         JOptionPane.showMessageDialog(
                 vista,
-                "Equipo habilitado correctamente."
+                "Equipo habilitado correctamente.",
+                "Equipo",
+                JOptionPane.INFORMATION_MESSAGE
         );
     }
 
@@ -444,6 +487,9 @@ public class equipoControlador {
         vista.setTxtEntrenador("");
 
         codigoEquipoSeleccionado = -1;
+
+        vista.getTblEquipos()
+                .clearSelection();
     }
 
     public void salir() {

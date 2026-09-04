@@ -46,37 +46,55 @@ public class reportesControlador {
 
     public void iniciar() {
 
-        vista.getBtnPrevisualizar()
-                .addActionListener(
-                        e -> listarReporte()
-                );
+        vista.getBtnPrevisualizar().addActionListener(
+                e -> listarReporte()
+        );
 
-        vista.getBtnPDF()
-                .addActionListener(
-                        e -> generarPDF()
-                );
+        vista.getBtnPDF().addActionListener(
+                e -> generarPDF()
+        );
 
-        vista.getBtnGrafico()
-                .addActionListener(
-                        e -> mostrarGrafico()
-                );
+        vista.getBtnGrafico().addActionListener(
+                e -> mostrarGrafico()
+        );
 
-        vista.getBtnSalir()
-                .addActionListener(
-                        e -> salir()
-                );
+        vista.getBtnSalir().addActionListener(
+                e -> salir()
+        );
 
+        cargarVideojuegos();
         cargarEstados();
 
         vista.setLocationRelativeTo(null);
         vista.setVisible(true);
     }
 
+    public void cargarVideojuegos() {
+
+        vista.getCmbVideojuego().removeAllItems();
+
+        vista.getCmbVideojuego().addItem(
+                "Todos los videojuegos"
+        );
+
+        vista.getCmbVideojuego().addItem("FIFA");
+        vista.getCmbVideojuego().addItem("League of Legends");
+        vista.getCmbVideojuego().addItem("Valorant");
+        vista.getCmbVideojuego().addItem("Free Fire");
+        vista.getCmbVideojuego().addItem("Call of Duty");
+        vista.getCmbVideojuego().addItem("Fortnite");
+        vista.getCmbVideojuego().addItem("Minecraft");
+        vista.getCmbVideojuego().addItem("Counter Strike");
+    }
+
     public void cargarEstados() {
 
         vista.getCmbEstado().removeAllItems();
 
-        vista.getCmbEstado().addItem("Todos los estados");
+        vista.getCmbEstado().addItem(
+                "Todos los estados"
+        );
+
         vista.getCmbEstado().addItem("PLANIFICADO");
         vista.getCmbEstado().addItem("EN CURSO");
         vista.getCmbEstado().addItem("FINALIZADO");
@@ -86,8 +104,7 @@ public class reportesControlador {
     private String obtenerEstado() {
 
         Object seleccionado =
-                vista.getCmbEstado()
-                        .getSelectedItem();
+                vista.getCmbEstado().getSelectedItem();
 
         if (seleccionado == null) {
             return "";
@@ -103,19 +120,38 @@ public class reportesControlador {
         return estado;
     }
 
+    private String obtenerVideojuego() {
+
+        Object seleccionado =
+                vista.getCmbVideojuego()
+                        .getSelectedItem();
+
+        if (seleccionado == null) {
+            return "";
+        }
+
+        String videojuego =
+                seleccionado.toString();
+
+        if (videojuego.equals(
+                "Todos los videojuegos")) {
+
+            return "";
+        }
+
+        return videojuego;
+    }
+
     public void listarReporte() {
 
         String fechaInicio =
-                vista.getTxtFechaInicio()
-                        .trim();
+                vista.getTxtFechaInicio().trim();
 
         String fechaFin =
-                vista.getTxtFechaFin()
-                        .trim();
+                vista.getTxtFechaFin().trim();
 
         String videojuego =
-                vista.getTxtVideojuego()
-                        .trim();
+                obtenerVideojuego();
 
         String estado =
                 obtenerEstado();
@@ -170,7 +206,8 @@ public class reportesControlador {
                     );
 
             if (listaReporte == null) {
-                listaReporte = new ArrayList<>();
+                listaReporte =
+                        new ArrayList<>();
             }
 
             JTable tabla =
@@ -345,15 +382,11 @@ public class reportesControlador {
         );
 
         selector.setSelectedFile(
-                new File(
-                        "Reporte_Torneos.pdf"
-                )
+                new File("Reporte_Torneos.pdf")
         );
 
         int opcion =
-                selector.showSaveDialog(
-                        vista
-                );
+                selector.showSaveDialog(vista);
 
         if (opcion != JFileChooser.APPROVE_OPTION) {
             return;
@@ -415,7 +448,7 @@ public class reportesControlador {
             documento.add(
                     new com.itextpdf.text.Paragraph(
                             "Videojuego: "
-                            + vista.getTxtVideojuego()
+                            + vista.getVideojuegoSeleccionado()
                     )
             );
 
@@ -475,23 +508,33 @@ public class reportesControlador {
                 );
 
                 tablaPDF.addCell(
-                        reporte.getNombre()
+                        reporte.getNombre() == null
+                        ? ""
+                        : reporte.getNombre()
                 );
 
                 tablaPDF.addCell(
-                        reporte.getVideojuego()
+                        reporte.getVideojuego() == null
+                        ? ""
+                        : reporte.getVideojuego()
                 );
 
                 tablaPDF.addCell(
-                        reporte.getFechaInicio()
+                        reporte.getFechaInicio() == null
+                        ? ""
+                        : reporte.getFechaInicio()
                 );
 
                 tablaPDF.addCell(
-                        reporte.getFechaFin()
+                        reporte.getFechaFin() == null
+                        ? ""
+                        : reporte.getFechaFin()
                 );
 
                 tablaPDF.addCell(
-                        reporte.getPremioTotal()
+                        reporte.getPremioTotal() == null
+                        ? ""
+                        : reporte.getPremioTotal().toString()
                 );
 
                 tablaPDF.addCell(
@@ -501,7 +544,9 @@ public class reportesControlador {
                 );
 
                 tablaPDF.addCell(
-                        reporte.getEstado()
+                        reporte.getEstado() == null
+                        ? ""
+                        : reporte.getEstado()
                 );
 
                 tablaPDF.addCell(
@@ -524,10 +569,13 @@ public class reportesControlador {
 
             try {
 
-                Desktop.getDesktop()
-                        .open(
-                                new File(archivo)
-                        );
+                if (Desktop.isDesktopSupported()) {
+
+                    Desktop.getDesktop()
+                            .open(
+                                    new File(archivo)
+                            );
+                }
 
             } catch (Exception e) {
 
@@ -579,7 +627,8 @@ public class reportesControlador {
                 if (videojuego == null
                         || videojuego.trim().isEmpty()) {
 
-                    videojuego = "Sin videojuego";
+                    videojuego =
+                            "Sin videojuego";
                 }
 
                 videojuego =
@@ -667,4 +716,3 @@ public class reportesControlador {
         }
     }
 }
-

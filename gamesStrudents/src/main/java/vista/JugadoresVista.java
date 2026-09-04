@@ -193,7 +193,7 @@ public class JugadoresVista extends javax.swing.JFrame {
 
         txtIdEquipo.setForeground(new java.awt.Color(153, 153, 153));
 
-        cmbRolJ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbRolJ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "TANQUE", "DPS", "SOPORTE" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

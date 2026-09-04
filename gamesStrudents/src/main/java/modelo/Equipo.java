@@ -87,7 +87,7 @@ public class Equipo {
     public void insertarEquipo() {
 
         String sentenciaSQL =
-                "{call gamestudents.sp_insertar_equipo(?,?,?,?,?,?)}";
+                "{CALL gamestudents.sp_insertar_equipo(?,?,?,?,?,?)}";
 
         ConexionBDD conectar = new ConexionBDD();
 
@@ -99,16 +99,31 @@ public class Equipo {
             ejecutar.setInt(1, codigo);
             ejecutar.setString(2, nombre);
             ejecutar.setString(3, paisProcedencia);
-            ejecutar.setDate(
-                    4,
-                    java.sql.Date.valueOf(fechaFundacion)
-            );
+
+            if (fechaFundacion != null) {
+                ejecutar.setDate(
+                        4,
+                        java.sql.Date.valueOf(fechaFundacion)
+                );
+            } else {
+                ejecutar.setNull(
+                        4,
+                        java.sql.Types.DATE
+                );
+            }
+
             ejecutar.setString(5, entrenador);
             ejecutar.setInt(6, estado);
 
             ejecutar.executeUpdate();
 
         } catch (SQLException e) {
+
+            System.out.println(
+                    "Error al insertar equipo: "
+                    + e.getMessage()
+            );
+
             e.printStackTrace();
         }
     }
@@ -116,7 +131,7 @@ public class Equipo {
     public void listarEquipos(JTable tabla) {
 
         String sentenciaSQL =
-                "{call gamestudents.sp_listar_equipos()}";
+                "{CALL gamestudents.sp_listar_equipos()}";
 
         ConexionBDD conectar = new ConexionBDD();
 
@@ -169,20 +184,25 @@ public class Equipo {
             tabla.setModel(modelo);
 
         } catch (SQLException e) {
+
+            System.out.println(
+                    "Error al listar equipos: "
+                    + e.getMessage()
+            );
+
             e.printStackTrace();
         }
     }
 
-    public void modificarEquipo(
-            int codigoActual,
-            int codigoNuevo,
+    public boolean modificarEquipo(
+            int codigo,
             String nombre,
             String paisProcedencia,
             LocalDate fechaFundacion,
             String entrenador) {
 
         String sentenciaSQL =
-                "{call gamestudents.sp_modificar_equipo(?,?,?,?,?,?)}";
+                "{CALL gamestudents.sp_modificar_equipo(?,?,?,?,?)}";
 
         ConexionBDD conectar = new ConexionBDD();
 
@@ -191,27 +211,60 @@ public class Equipo {
                 CallableStatement ejecutar =
                         conectado.prepareCall(sentenciaSQL)) {
 
-            ejecutar.setInt(1, codigoActual);
-            ejecutar.setInt(2, codigoNuevo);
-            ejecutar.setString(3, nombre);
-            ejecutar.setString(4, paisProcedencia);
-            ejecutar.setDate(
+            ejecutar.setInt(1, codigo);
+            ejecutar.setString(2, nombre);
+            ejecutar.setString(3, paisProcedencia);
+
+            if (fechaFundacion != null) {
+
+                ejecutar.setDate(
+                        4,
+                        java.sql.Date.valueOf(
+                                fechaFundacion
+                        )
+                );
+
+            } else {
+
+                ejecutar.setNull(
+                        4,
+                        java.sql.Types.DATE
+                );
+            }
+
+            ejecutar.setString(
                     5,
-                    java.sql.Date.valueOf(fechaFundacion)
+                    entrenador
             );
-            ejecutar.setString(6, entrenador);
 
-            ejecutar.executeUpdate();
+            int filasAfectadas =
+                    ejecutar.executeUpdate();
+
+            System.out.println(
+                    "Filas modificadas: "
+                    + filasAfectadas
+            );
+
+            return filasAfectadas > 0;
 
         } catch (SQLException e) {
+
+            System.out.println(
+                    "Error al modificar equipo: "
+                    + e.getMessage()
+            );
+
             e.printStackTrace();
+
+            return false;
         }
     }
 
-    public void inhabilitarEquipo(int codigoEquipo) {
+    public void inhabilitarEquipo(
+            int codigoEquipo) {
 
         String sentenciaSQL =
-                "{call gamestudents.sp_inhabilitar_equipo(?)}";
+                "{CALL gamestudents.sp_inhabilitar_equipo(?)}";
 
         ConexionBDD conectar = new ConexionBDD();
 
@@ -220,19 +273,29 @@ public class Equipo {
                 CallableStatement ejecutar =
                         conectado.prepareCall(sentenciaSQL)) {
 
-            ejecutar.setInt(1, codigoEquipo);
+            ejecutar.setInt(
+                    1,
+                    codigoEquipo
+            );
 
             ejecutar.executeUpdate();
 
         } catch (SQLException e) {
+
+            System.out.println(
+                    "Error al inhabilitar equipo: "
+                    + e.getMessage()
+            );
+
             e.printStackTrace();
         }
     }
 
-    public void habilitarEquipo(int codigoEquipo) {
+    public void habilitarEquipo(
+            int codigoEquipo) {
 
         String sentenciaSQL =
-                "{call gamestudents.sp_habilitar_equipo(?)}";
+                "{CALL gamestudents.sp_habilitar_equipo(?)}";
 
         ConexionBDD conectar = new ConexionBDD();
 
@@ -241,19 +304,29 @@ public class Equipo {
                 CallableStatement ejecutar =
                         conectado.prepareCall(sentenciaSQL)) {
 
-            ejecutar.setInt(1, codigoEquipo);
+            ejecutar.setInt(
+                    1,
+                    codigoEquipo
+            );
 
             ejecutar.executeUpdate();
 
         } catch (SQLException e) {
+
+            System.out.println(
+                    "Error al habilitar equipo: "
+                    + e.getMessage()
+            );
+
             e.printStackTrace();
         }
     }
 
-    public Equipo buscarEquipo(int codigoEquipo) {
+    public Equipo buscarEquipo(
+            int codigoEquipo) {
 
         String sentenciaSQL =
-                "{call gamestudents.sp_buscar_equipo(?)}";
+                "{CALL gamestudents.sp_buscar_equipo(?)}";
 
         ConexionBDD conectar = new ConexionBDD();
 
@@ -262,21 +335,30 @@ public class Equipo {
                 CallableStatement ejecutar =
                         conectado.prepareCall(sentenciaSQL)) {
 
-            ejecutar.setInt(1, codigoEquipo);
+            ejecutar.setInt(
+                    1,
+                    codigoEquipo
+            );
 
-            try (ResultSet resultado =
-                    ejecutar.executeQuery()) {
+            try (
+                    ResultSet resultado =
+                            ejecutar.executeQuery()) {
 
                 if (resultado.next()) {
 
-                    Equipo equipo = new Equipo();
+                    Equipo equipo =
+                            new Equipo();
 
                     equipo.setCodigo(
-                            resultado.getInt("codigo")
+                            resultado.getInt(
+                                    "codigo"
+                            )
                     );
 
                     equipo.setNombre(
-                            resultado.getString("nombre")
+                            resultado.getString(
+                                    "nombre"
+                            )
                     );
 
                     equipo.setPaisProcedencia(
@@ -303,7 +385,9 @@ public class Equipo {
                     );
 
                     equipo.setEstado(
-                            resultado.getInt("estado")
+                            resultado.getInt(
+                                    "estado"
+                            )
                     );
 
                     return equipo;
@@ -311,6 +395,12 @@ public class Equipo {
             }
 
         } catch (SQLException e) {
+
+            System.out.println(
+                    "Error al buscar equipo: "
+                    + e.getMessage()
+            );
+
             e.printStackTrace();
         }
 
@@ -321,5 +411,47 @@ public class Equipo {
     public String toString() {
         return nombre;
     }
+    
+    public java.util.ArrayList<String[]> listarEquiposCombo() {
+
+    java.util.ArrayList<String[]> lista =
+            new java.util.ArrayList<>();
+
+    String sql =
+            "{CALL gamestudents.sp_listar_equipos()}";
+
+    ConexionBDD conexion =
+            new ConexionBDD();
+
+    try (
+            Connection con = conexion.conectar();
+            CallableStatement cs = con.prepareCall(sql);
+            ResultSet rs = cs.executeQuery()
+    ) {
+
+        while (rs.next()) {
+
+            if (rs.getInt("estado") == 1) {
+
+                String[] equipo = new String[2];
+
+                equipo[0] =
+                        String.valueOf(
+                                rs.getInt("codigo")
+                        );
+
+                equipo[1] =
+                        rs.getString("nombre");
+
+                lista.add(equipo);
+            }
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return lista;
 }
 
+}
