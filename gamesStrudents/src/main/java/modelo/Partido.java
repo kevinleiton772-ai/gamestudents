@@ -579,4 +579,67 @@ public class Partido {
 
         this.idSede = idSede;
     }
+    
+    public void listarPartidosPublicos(JTable tabla) {
+
+    String sentenciaSQL =
+            "{call gamestudents.sp_listar_partidos_publicos()}";
+
+    ConexionBDD conectar =
+            new ConexionBDD();
+
+    DefaultTableModel modelo =
+            new DefaultTableModel() {
+
+        @Override
+        public boolean isCellEditable(
+                int row,
+                int column) {
+
+            return false;
+        }
+    };
+
+    modelo.addColumn("Fecha");
+    modelo.addColumn("Hora");
+    modelo.addColumn("Equipo 1");
+    modelo.addColumn("VS");
+    modelo.addColumn("Equipo 2");
+
+    try (
+            Connection conectado =
+                    conectar.conectar();
+
+            CallableStatement ejecutar =
+                    conectado.prepareCall(sentenciaSQL);
+
+            ResultSet resultado =
+                    ejecutar.executeQuery()) {
+
+        while (resultado.next()) {
+
+            Object[] fila = {
+
+                resultado.getDate("fecha"),
+
+                resultado.getTime("hora"),
+
+                resultado.getString("equipo1"),
+
+                "VS",
+
+                resultado.getString("equipo2")
+            };
+
+            modelo.addRow(fila);
+        }
+
+        tabla.setModel(modelo);
+
+    } catch (SQLException e) {
+
+        e.printStackTrace();
+    }
+}
+
 }

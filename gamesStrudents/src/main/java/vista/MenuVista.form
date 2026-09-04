@@ -27,12 +27,13 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="111" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="btnSalir" max="32767" attributes="0"/>
                   <Component id="btnReportes" alignment="0" max="32767" attributes="0"/>
-                  <Component id="btnEquipo" alignment="0" pref="98" max="32767" attributes="0"/>
-                  <Component id="btnJugadores" pref="98" max="32767" attributes="0"/>
-                  <Component id="btnPartidos" alignment="0" pref="98" max="32767" attributes="0"/>
-                  <Component id="btnTorneos" alignment="0" pref="98" max="32767" attributes="0"/>
-                  <Component id="btnSalir" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnEquipo" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnJugadores" max="32767" attributes="0"/>
+                  <Component id="btnPartidos" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnTorneos" alignment="0" max="32767" attributes="0"/>
+                  <Component id="btnPublico" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -52,9 +53,11 @@
               <Component id="btnPartidos" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="btnReportes" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <Component id="btnPublico" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="btnSalir" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="0" pref="37" max="32767" attributes="0"/>
+              <EmptySpace min="0" pref="97" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -131,6 +134,11 @@
     <Component class="javax.swing.JButton" name="btnSalir">
       <Properties>
         <Property name="text" type="java.lang.String" value="Salir"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnPublico">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="VISTA P&#xda;BLICA"/>
       </Properties>
     </Component>
   </SubComponents>

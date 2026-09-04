@@ -15,6 +15,7 @@ import vista.JugadoresVista;
 import vista.EquipoVista;
 import vista.PartidoVista;
 import vista.TorneoVista;
+import vista.publicoVista;
 import vista.reportesVista;
 
 public class menuControlador {
@@ -56,6 +57,10 @@ public class menuControlador {
 
         vista.getBtnReportes().addActionListener(
                 e -> abrirReportes()
+        );
+
+        vista.getBtnPublico().addActionListener(
+                e -> abrirPublico()
         );
 
         vista.getBtnSalir().addActionListener(
@@ -224,6 +229,40 @@ public class menuControlador {
             JOptionPane.showMessageDialog(
                     vista,
                     "Error al abrir reportes:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
+    }
+
+
+    private void abrirPublico() {
+
+        try {
+
+            Partido modeloPartido =
+                    new Partido();
+
+            publicoVista vistaPublico =
+                    new publicoVista();
+
+            publicoControlador controladorPublico =
+                    new publicoControlador(
+                            modeloPartido,
+                            vistaPublico,
+                            vista
+                    );
+
+            vista.setVisible(false);
+
+            controladorPublico.iniciar();
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Error al abrir la vista pública:\n"
                     + e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
