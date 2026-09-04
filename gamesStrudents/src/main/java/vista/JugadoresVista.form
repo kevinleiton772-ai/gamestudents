@@ -27,7 +27,6 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="IdEquipo" min="-2" pref="94" max="-2" attributes="0"/>
                   <Component id="jLabel4" min="-2" pref="126" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Group type="102" alignment="1" attributes="0">
@@ -58,13 +57,17 @@
                                   <Component id="jLabel6" min="-2" pref="94" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
                               </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="IdEquipo" min="-2" pref="94" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                              </Group>
                           </Group>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="txtNickname" alignment="0" max="32767" attributes="0"/>
                               <Component id="txtNombreReal" alignment="0" max="32767" attributes="0"/>
                               <Component id="txtFechaNacimiento" alignment="0" max="32767" attributes="0"/>
-                              <Component id="txtIdEquipo" alignment="0" max="32767" attributes="0"/>
                               <Component id="cmbRolJ" alignment="0" pref="204" max="32767" attributes="0"/>
+                              <Component id="cmbEquipo" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -95,7 +98,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="IdEquipo" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtIdEquipo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="cmbEquipo" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -104,7 +107,7 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jScrollPane1" min="-2" pref="219" max="-2" attributes="0"/>
-              <EmptySpace pref="42" max="32767" attributes="0"/>
+              <EmptySpace pref="40" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="btnCrear" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnModificar" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -304,13 +307,6 @@
         </Property>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="txtIdEquipo">
-      <Properties>
-        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="99" green="99" red="99" type="rgb"/>
-        </Property>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JComboBox" name="cmbRolJ">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
@@ -319,6 +315,21 @@
             <StringItem index="1" value="TANQUE"/>
             <StringItem index="2" value="DPS"/>
             <StringItem index="3" value="SOPORTE"/>
+          </StringArray>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cmbEquipo">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Item 1"/>
+            <StringItem index="1" value="Item 2"/>
+            <StringItem index="2" value="Item 3"/>
+            <StringItem index="3" value="Item 4"/>
           </StringArray>
         </Property>
       </Properties>

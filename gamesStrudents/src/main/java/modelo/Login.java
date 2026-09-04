@@ -13,7 +13,7 @@ public class Login {
     private String tipo;
     private int idUsuario;
 
-    ConexionBDD conectar = new ConexionBDD();
+    private ConexionBDD conectar = new ConexionBDD();
 
     public Login() {
     }
@@ -55,63 +55,45 @@ public class Login {
         this.idUsuario = idUsuario;
     }
 
-public boolean iniciarSesion() {
+    public boolean iniciarSesion() {
 
-    boolean resultado = false;
+        String sentenciaSQL =
+                "{CALL gamestudents.sp_login(?, ?)}";
 
-    String sentenciaSQL =
-            "{CALL gamestudents.sp_login(?, ?)}";
-
-    try (
-            Connection conexion =
-                    conectar.conectar();
+        try (
+            Connection conexion = conectar.conectar();
 
             CallableStatement ejecutar =
                     conexion.prepareCall(sentenciaSQL)
-    ) {
-
-        ejecutar.setString(1, usuario);
-        ejecutar.setString(2, contrasena);
-
-        try (
-                ResultSet res =
-                        ejecutar.executeQuery()
         ) {
 
-            if (res.next()) {
+            ejecutar.setString(1, usuario);
+            ejecutar.setString(2, contrasena);
 
-                idUsuario =
-                        res.getInt("id_usuario");
+            try (ResultSet res = ejecutar.executeQuery()) {
 
-                resultado = true;
+                if (res.next()) {
 
-                System.out.println(
-                        "Inicio de sesión exitoso"
-                );
+                    idUsuario =
+                            res.getInt("id_usuario");
 
-                System.out.println(
-                        "ID Usuario: "
-                        + idUsuario
-                );
+                    tipo =
+                            res.getString("rol");
 
-            } else {
-
-                System.out.println(
-                        "Usuario o contraseña incorrectos."
-                );
+                    return true;
+                }
             }
+
+        } catch (SQLException e) {
+
+            System.out.println(
+                    "Error al iniciar sesión: "
+                    + e.getMessage()
+            );
+
+            e.printStackTrace();
         }
 
-    } catch (SQLException e) {
-
-        System.out.println(
-                "Error al iniciar sesión: "
-                + e.getMessage()
-        );
-
-        e.printStackTrace();
+        return false;
     }
-
-    return resultado;
-}
 }

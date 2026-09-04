@@ -2,6 +2,7 @@
 package vista;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 
@@ -9,11 +10,11 @@ import javax.swing.JTextField;
 public class JugadoresVista extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(JugadoresVista.class.getName());
-
-  
-    public JugadoresVista() {
+public JugadoresVista() {
         initComponents();
     }
+
+
     public JTextField getTxtNickname() {
         return txtNickname;
     }
@@ -38,29 +39,25 @@ public class JugadoresVista extends javax.swing.JFrame {
         txtFechaNacimiento.setText(texto);
     }
 
-    public JTextField getTxtIdEquipo() {
-        return txtIdEquipo;
+
+    public JComboBox<String> getCmbRol() {
+        return cmbRolJ;
     }
 
-    public void setTxtIdEquipo(String texto) {
-        txtIdEquipo.setText(texto);
-    }
-
-  
-
-    public String getCmbRol() {
-
+    public String getRolSeleccionado() {
         if (cmbRolJ.getSelectedItem() == null) {
             return "";
         }
 
-        return cmbRolJ
-                .getSelectedItem()
-                .toString();
+        return cmbRolJ.getSelectedItem().toString();
     }
 
     public void setCmbRol(String rol) {
         cmbRolJ.setSelectedItem(rol);
+    }
+
+    public JComboBox<String> getCmbEquipo() {
+        return cmbEquipo;
     }
 
     public JTable getTblJugadores() {
@@ -86,6 +83,9 @@ public class JugadoresVista extends javax.swing.JFrame {
     public JButton getBtnSalir() {
         return btnSalir;
     }
+
+  
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -107,8 +107,8 @@ public class JugadoresVista extends javax.swing.JFrame {
         lol = new javax.swing.JLabel();
         txtFechaNacimiento = new javax.swing.JTextField();
         txtNombreReal = new javax.swing.JTextField();
-        txtIdEquipo = new javax.swing.JTextField();
         cmbRolJ = new javax.swing.JComboBox<>();
+        cmbEquipo = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -191,9 +191,9 @@ public class JugadoresVista extends javax.swing.JFrame {
 
         txtNombreReal.setForeground(new java.awt.Color(153, 153, 153));
 
-        txtIdEquipo.setForeground(new java.awt.Color(153, 153, 153));
-
         cmbRolJ.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Seleccione...", "TANQUE", "DPS", "SOPORTE" }));
+
+        cmbEquipo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -203,7 +203,6 @@ public class JugadoresVista extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(22, 22, 22)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(IdEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(layout.createSequentialGroup()
@@ -228,13 +227,16 @@ public class JugadoresVista extends javax.swing.JFrame {
                                         .addGap(58, 58, 58)))
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(58, 58, 58))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                    .addComponent(IdEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(58, 58, 58)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(txtNickname)
                                 .addComponent(txtNombreReal)
                                 .addComponent(txtFechaNacimiento)
-                                .addComponent(txtIdEquipo)
-                                .addComponent(cmbRolJ, 0, 204, Short.MAX_VALUE)))))
+                                .addComponent(cmbRolJ, 0, 204, Short.MAX_VALUE)
+                                .addComponent(cmbEquipo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -256,14 +258,14 @@ public class JugadoresVista extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(IdEquipo)
-                    .addComponent(txtIdEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lol)
                     .addComponent(cmbRolJ, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCrear)
                     .addComponent(btnModificar)
@@ -316,6 +318,7 @@ public class JugadoresVista extends javax.swing.JFrame {
     private javax.swing.JButton btnInhabilitar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JComboBox<String> cmbEquipo;
     private javax.swing.JComboBox<String> cmbRolJ;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -326,7 +329,6 @@ public class JugadoresVista extends javax.swing.JFrame {
     private javax.swing.JLabel lol;
     private javax.swing.JTable tblJugadores;
     private javax.swing.JTextField txtFechaNacimiento;
-    private javax.swing.JTextField txtIdEquipo;
     private javax.swing.JTextField txtNickname;
     private javax.swing.JTextField txtNombreReal;
     // End of variables declaration//GEN-END:variables

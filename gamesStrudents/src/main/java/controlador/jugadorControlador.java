@@ -1,6 +1,7 @@
 package controlador;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import modelo.Jugador;
@@ -13,6 +14,9 @@ public class jugadorControlador {
     private JFrame ventanaAnterior;
 
     private int idJugadorSeleccionado = -1;
+
+    private ArrayList<Integer> idsEquipos =
+            new ArrayList<>();
 
     public jugadorControlador() {
     }
@@ -58,16 +62,40 @@ public class jugadorControlador {
                     }
                 });
 
-        cargarRoles();
+        cargarEquipos();
         cargarJugadores();
 
         vista.setLocationRelativeTo(null);
         vista.setVisible(true);
     }
 
-    private void cargarRoles() {
+    private void cargarEquipos() {
 
-        vista.setCmbRol("Seleccione...");
+        if (modelo == null) {
+            modelo = new Jugador();
+        }
+
+        vista.getCmbEquipo().removeAllItems();
+
+        idsEquipos.clear();
+
+        vista.getCmbEquipo().addItem("Sin equipo");
+
+        idsEquipos.add(null);
+
+        ArrayList<String[]> equipos =
+                modelo.listarEquiposCombo();
+
+        for (String[] equipo : equipos) {
+
+            idsEquipos.add(
+                    Integer.parseInt(equipo[0])
+            );
+
+            vista.getCmbEquipo().addItem(
+                    equipo[1]
+            );
+        }
     }
 
     public void cargarJugadores() {
@@ -81,7 +109,7 @@ public class jugadorControlador {
         );
     }
 
-    public void insertarJugador() {
+    private void insertarJugador() {
 
         String nickname =
                 vista.getTxtNickname()
@@ -98,19 +126,8 @@ public class jugadorControlador {
                         .getText()
                         .trim();
 
-        String equipoTexto =
-                vista.getTxtIdEquipo()
-                        .getText()
-                        .trim();
-
         String rol =
-                vista.getCmbRol();
-
-        if (rol == null) {
-            rol = "";
-        }
-
-        rol = rol.trim();
+                vista.getRolSeleccionado();
 
         if (nickname.isEmpty()
                 || nombreReal.isEmpty()
@@ -171,45 +188,12 @@ public class jugadorControlador {
             return;
         }
 
-        Integer idEquipo = null;
-
-        if (!equipoTexto.isEmpty()) {
-
-            try {
-
-                idEquipo =
-                        Integer.parseInt(
-                                equipoTexto
-                        );
-
-                if (idEquipo <= 0) {
-
-                    JOptionPane.showMessageDialog(
-                            vista,
-                            "El ID del equipo debe ser válido.",
-                            "Error",
-                            JOptionPane.WARNING_MESSAGE
-                    );
-
-                    return;
-                }
-
-            } catch (NumberFormatException e) {
-
-                JOptionPane.showMessageDialog(
-                        vista,
-                        "El ID del equipo debe ser un número.",
-                        "Error",
-                        JOptionPane.WARNING_MESSAGE
-                );
-
-                return;
-            }
-        }
+        Integer idEquipo =
+                obtenerIdEquipo();
 
         try {
 
-            modelo =
+            Jugador nuevoJugador =
                     new Jugador(
                             nickname,
                             nombreReal,
@@ -218,7 +202,7 @@ public class jugadorControlador {
                             idEquipo
                     );
 
-            modelo.insertarJugador();
+            nuevoJugador.insertarJugador();
 
             cargarJugadores();
             limpiarCampos();
@@ -234,15 +218,14 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Error al registrar jugador:\n"
-                    + e.getMessage(),
+                    e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
         }
     }
 
-    public void seleccionarJugador() {
+    private void seleccionarJugador() {
 
         int fila =
                 vista.getTblJugadores()
@@ -257,10 +240,7 @@ public class jugadorControlador {
             idJugadorSeleccionado =
                     Integer.parseInt(
                             vista.getTblJugadores()
-                                    .getValueAt(
-                                            fila,
-                                            0
-                                    )
+                                    .getValueAt(fila, 0)
                                     .toString()
                     );
 
@@ -268,7 +248,7 @@ public class jugadorControlador {
                     vista.getTblJugadores()
                             .getValueAt(fila, 1);
 
-            Object nombreReal =
+            Object nombre =
                     vista.getTblJugadores()
                             .getValueAt(fila, 2);
 
@@ -291,9 +271,9 @@ public class jugadorControlador {
             );
 
             vista.setTxtNombreReal(
-                    nombreReal == null
+                    nombre == null
                             ? ""
-                            : nombreReal.toString()
+                            : nombre.toString()
             );
 
             vista.setTxtFechaNacimiento(
@@ -308,11 +288,19 @@ public class jugadorControlador {
                             : rol.toString()
             );
 
-            vista.setTxtIdEquipo(
-                    equipo == null
-                            ? ""
-                            : equipo.toString()
-            );
+            if (equipo == null) {
+
+                vista.getCmbEquipo()
+                        .setSelectedIndex(0);
+
+            } else {
+
+                seleccionarEquipo(
+                        Integer.parseInt(
+                                equipo.toString()
+                        )
+                );
+            }
 
         } catch (Exception e) {
 
@@ -326,7 +314,45 @@ public class jugadorControlador {
         }
     }
 
-    public void modificarJugador() {
+    private void seleccionarEquipo(int idEquipo) {
+
+        for (int i = 0;
+                i < idsEquipos.size();
+                i++) {
+
+            Integer id =
+                    idsEquipos.get(i);
+
+            if (id != null
+                    && id.equals(idEquipo)) {
+
+                vista.getCmbEquipo()
+                        .setSelectedIndex(i);
+
+                return;
+            }
+        }
+
+        vista.getCmbEquipo()
+                .setSelectedIndex(0);
+    }
+
+    private Integer obtenerIdEquipo() {
+
+        int posicion =
+                vista.getCmbEquipo()
+                        .getSelectedIndex();
+
+        if (posicion < 0
+                || posicion >= idsEquipos.size()) {
+
+            return null;
+        }
+
+        return idsEquipos.get(posicion);
+    }
+
+    private void modificarJugador() {
 
         if (idJugadorSeleccionado == -1) {
 
@@ -355,19 +381,8 @@ public class jugadorControlador {
                         .getText()
                         .trim();
 
-        String equipoTexto =
-                vista.getTxtIdEquipo()
-                        .getText()
-                        .trim();
-
         String rol =
-                vista.getCmbRol();
-
-        if (rol == null) {
-            rol = "";
-        }
-
-        rol = rol.trim();
+                vista.getRolSeleccionado();
 
         if (nickname.isEmpty()
                 || nombreReal.isEmpty()
@@ -428,41 +443,8 @@ public class jugadorControlador {
             return;
         }
 
-        Integer idEquipo = null;
-
-        if (!equipoTexto.isEmpty()) {
-
-            try {
-
-                idEquipo =
-                        Integer.parseInt(
-                                equipoTexto
-                        );
-
-                if (idEquipo <= 0) {
-
-                    JOptionPane.showMessageDialog(
-                            vista,
-                            "El ID del equipo debe ser válido.",
-                            "Error",
-                            JOptionPane.WARNING_MESSAGE
-                    );
-
-                    return;
-                }
-
-            } catch (NumberFormatException e) {
-
-                JOptionPane.showMessageDialog(
-                        vista,
-                        "El ID del equipo debe ser un número.",
-                        "Error",
-                        JOptionPane.WARNING_MESSAGE
-                );
-
-                return;
-            }
-        }
+        Integer idEquipo =
+                obtenerIdEquipo();
 
         int respuesta =
                 JOptionPane.showConfirmDialog(
@@ -501,15 +483,14 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Error al modificar jugador:\n"
-                    + e.getMessage(),
+                    e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
         }
     }
 
-    public void inhabilitarJugador() {
+    private void inhabilitarJugador() {
 
         if (idJugadorSeleccionado == -1) {
 
@@ -555,15 +536,14 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Error al inhabilitar jugador:\n"
-                    + e.getMessage(),
+                    e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
         }
     }
 
-    public void habilitarJugador() {
+    private void habilitarJugador() {
 
         if (idJugadorSeleccionado == -1) {
 
@@ -609,8 +589,7 @@ public class jugadorControlador {
 
             JOptionPane.showMessageDialog(
                     vista,
-                    "Error al habilitar jugador:\n"
-                    + e.getMessage(),
+                    e.getMessage(),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
@@ -622,21 +601,29 @@ public class jugadorControlador {
         vista.setTxtNickname("");
         vista.setTxtNombreReal("");
         vista.setTxtFechaNacimiento("");
-        vista.setTxtIdEquipo("");
         vista.setCmbRol("Seleccione...");
 
+        if (vista.getCmbEquipo().getItemCount() > 0) {
+            vista.getCmbEquipo()
+                    .setSelectedIndex(0);
+        }
+
         idJugadorSeleccionado = -1;
-        vista.getTblJugadores().clearSelection();
+
+        vista.getTblJugadores()
+                .clearSelection();
     }
 
-    private boolean validarNickname(String nickname) {
+    private boolean validarNickname(
+            String nickname) {
 
         return nickname.matches(
                 "[a-zA-Z0-9_-]+"
         );
     }
 
-    private boolean validarNombre(String nombre) {
+    private boolean validarNombre(
+            String nombre) {
 
         return nombre.matches(
                 "[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ ]+"

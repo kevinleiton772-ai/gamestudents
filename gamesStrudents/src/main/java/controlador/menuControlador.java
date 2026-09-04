@@ -195,46 +195,41 @@ public class menuControlador {
                     "Error",
                     JOptionPane.ERROR_MESSAGE
             );
-
-            e.printStackTrace();
         }
     }
 
     private void abrirReportes() {
 
-    try {
+        try {
 
-        Reporte modeloReporte =
-                new Reporte();
+            Reporte modeloReporte =
+                    new Reporte();
 
-        reportesVista vistaReportes =
-                new reportesVista();
+            reportesVista vistaReportes =
+                    new reportesVista();
 
-        reportesControlador controladorReportes =
-                new reportesControlador(
-                        modeloReporte,
-                        vistaReportes,
-                        vista
-                );
+            reportesControlador controladorReportes =
+                    new reportesControlador(
+                            modeloReporte,
+                            vistaReportes,
+                            vista
+                    );
 
-        vista.setVisible(false);
+            vista.setVisible(false);
 
-        controladorReportes.iniciar();
+            controladorReportes.iniciar();
 
-    } catch (Exception e) {
+        } catch (Exception e) {
 
-        JOptionPane.showMessageDialog(
-                vista,
-                "Error al abrir reportes:\n"
-                + e.getMessage(),
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-        );
-
-        e.printStackTrace();
+            JOptionPane.showMessageDialog(
+                    vista,
+                    "Error al abrir reportes:\n"
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
-}
-
 
     private void salir() {
 

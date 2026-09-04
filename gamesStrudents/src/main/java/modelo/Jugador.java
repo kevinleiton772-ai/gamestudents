@@ -3,8 +3,10 @@ package modelo;
 import controlador.ConexionBDD;
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.swing.JTable;
@@ -111,272 +113,355 @@ public class Jugador {
     public void setEstado(int estado) {
         this.estado = estado;
     }
-    
-public void insertarJugador() {
 
-    String sentenciaSQL =
-            "{call gamestudents.sp_insertar_jugador(?,?,?,?,?,?)}";
+    public void insertarJugador() {
 
-    ConexionBDD conectar = new ConexionBDD();
+        String sql = "{call gamestudents.sp_insertar_jugador(?,?,?,?,?,?)}";
 
-    try (
-            Connection conectado = conectar.conectar();
-            CallableStatement ejecutar =
-                    conectado.prepareCall(sentenciaSQL)) {
+        ConexionBDD conectar = new ConexionBDD();
 
-        ejecutar.setString(1, nickname);
-        ejecutar.setString(2, nombreReal);
+        try (
+                Connection conexion = conectar.conectar();
+                CallableStatement cs = conexion.prepareCall(sql)) {
 
-        if (fechaNacimiento != null) {
-            ejecutar.setDate(
-                    3,
-                    java.sql.Date.valueOf(fechaNacimiento)
-            );
-        } else {
-            ejecutar.setNull(
-                    3,
-                    java.sql.Types.DATE
-            );
-        }
+            cs.setString(1, nickname);
+            cs.setString(2, nombreReal);
 
-        ejecutar.setString(4, rol);
-
-        if (idEquipo != null) {
-            ejecutar.setInt(5, idEquipo);
-        } else {
-            ejecutar.setNull(
-                    5,
-                    java.sql.Types.INTEGER
-            );
-        }
-
-        ejecutar.setInt(6, estado);
-
-        ejecutar.execute();
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
-public void listarJugadores(JTable tabla) {
-
-    String sentenciaSQL =
-            "{call gamestudents.sp_listar_jugadores()}";
-
-    ConexionBDD conectar = new ConexionBDD();
-
-    DefaultTableModel modelo =
-            new DefaultTableModel() {
-
-        @Override
-        public boolean isCellEditable(
-                int row,
-                int column) {
-
-            return false;
-        }
-    };
-
-    modelo.addColumn("ID Jugador");
-    modelo.addColumn("Nickname");
-    modelo.addColumn("Nombre Real");
-    modelo.addColumn("Fecha Nacimiento");
-    modelo.addColumn("Rol");
-    modelo.addColumn("ID Equipo");
-    modelo.addColumn("Estado");
-
-    try (
-            Connection conectado = conectar.conectar();
-            CallableStatement ejecutar =
-                    conectado.prepareCall(sentenciaSQL);
-            ResultSet resultado =
-                    ejecutar.executeQuery()) {
-
-        while (resultado.next()) {
-
-            String estadoTexto =
-                    resultado.getInt("estado") == 1
-                            ? "Activo"
-                            : "Inactivo";
-
-            Object[] fila = {
-
-                resultado.getInt("id_jugador"),
-                resultado.getString("nickname"),
-                resultado.getString("nombre_real"),
-                resultado.getDate("fecha_nacimiento"),
-                resultado.getString("rol"),
-                resultado.getObject("id_equipo"),
-                estadoTexto
-            };
-
-            modelo.addRow(fila);
-        }
-
-        tabla.setModel(modelo);
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
-public void inhabilitarJugador(int idJugador) {
-
-    String sentenciaSQL =
-            "{call gamestudents.sp_inhabilitar_jugador(?)}";
-
-    ConexionBDD conectar = new ConexionBDD();
-
-    try (
-            Connection conectado = conectar.conectar();
-            CallableStatement ejecutar =
-                    conectado.prepareCall(sentenciaSQL)) {
-
-        ejecutar.setInt(1, idJugador);
-        ejecutar.executeUpdate();
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
-public void habilitarJugador(int idJugador) {
-
-    String sentenciaSQL =
-            "{call gamestudents.sp_habilitar_jugador(?)}";
-
-    ConexionBDD conectar = new ConexionBDD();
-
-    try (
-            Connection conectado = conectar.conectar();
-            CallableStatement ejecutar =
-                    conectado.prepareCall(sentenciaSQL)) {
-
-        ejecutar.setInt(1, idJugador);
-        ejecutar.executeUpdate();
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
-public void modificarJugador(
-        int idJugador,
-        String nickname,
-        String nombreReal,
-        LocalDate fechaNacimiento,
-        String rol,
-        Integer idEquipo) {
-
-    String sentenciaSQL =
-            "{call gamestudents.sp_modificar_jugador(?,?,?,?,?,?)}";
-
-    ConexionBDD conectar = new ConexionBDD();
-
-    try (
-            Connection conectado = conectar.conectar();
-            CallableStatement ejecutar =
-                    conectado.prepareCall(sentenciaSQL)) {
-
-        ejecutar.setInt(1, idJugador);
-        ejecutar.setString(2, nickname);
-        ejecutar.setString(3, nombreReal);
-
-        if (fechaNacimiento != null) {
-
-            ejecutar.setDate(
-                    4,
-                    java.sql.Date.valueOf(
-                            fechaNacimiento
-                    )
-            );
-
-        } else {
-
-            ejecutar.setNull(
-                    4,
-                    java.sql.Types.DATE
-            );
-        }
-
-        ejecutar.setString(5, rol);
-
-        if (idEquipo != null) {
-
-            ejecutar.setInt(
-                    6,
-                    idEquipo
-            );
-
-        } else {
-
-            ejecutar.setNull(
-                    6,
-                    java.sql.Types.INTEGER
-            );
-        }
-
-        ejecutar.executeUpdate();
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-}
-
-public ArrayList<String[]> listarJugadoresCombo() {
-
-    ArrayList<String[]> lista =
-            new ArrayList<>();
-
-    String sentenciaSQL =
-            "{call gamestudents.sp_listar_jugadores()}";
-
-    ConexionBDD conectar =
-            new ConexionBDD();
-
-    try (
-            Connection conectado =
-                    conectar.conectar();
-
-            CallableStatement ejecutar =
-                    conectado.prepareCall(sentenciaSQL);
-
-            ResultSet resultado =
-                    ejecutar.executeQuery()) {
-
-        while (resultado.next()) {
-
-            if (resultado.getInt("estado") == 1) {
-
-                String[] jugador =
-                        new String[2];
-
-                jugador[0] =
-                        String.valueOf(
-                                resultado.getInt(
-                                        "id_jugador"
-                                )
-                        );
-
-                jugador[1] =
-                        resultado.getString(
-                                "nickname"
-                        );
-
-                lista.add(jugador);
+            if (fechaNacimiento != null) {
+                cs.setDate(3, java.sql.Date.valueOf(fechaNacimiento));
+            } else {
+                cs.setNull(3, Types.DATE);
             }
+
+            cs.setString(4, rol);
+
+            if (idEquipo != null) {
+                cs.setInt(5, idEquipo);
+            } else {
+                cs.setNull(5, Types.INTEGER);
+            }
+
+            cs.setInt(6, estado);
+
+            cs.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error al insertar jugador: " + e.getMessage(), e
+            );
+        }
+    }
+
+    public void listarJugadores(JTable tabla) {
+
+        String sql = "{call gamestudents.sp_listar_jugadores()}";
+
+        ConexionBDD conectar = new ConexionBDD();
+
+        DefaultTableModel modeloTabla = new DefaultTableModel(
+                new Object[]{
+                    "ID Jugador",
+                    "Nickname",
+                    "Nombre Real",
+                    "Fecha Nacimiento",
+                    "Rol",
+                    "ID Equipo",
+                    "Estado"
+                }, 0) {
+
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+
+        try (
+                Connection conexion = conectar.conectar();
+                CallableStatement cs = conexion.prepareCall(sql);
+                ResultSet rs = cs.executeQuery()) {
+
+            while (rs.next()) {
+
+                Object equipo = rs.getObject("id_equipo");
+
+                String estadoTexto =
+                        rs.getInt("estado") == 1
+                                ? "Activo"
+                                : "Inactivo";
+
+                modeloTabla.addRow(new Object[]{
+                    rs.getInt("id_jugador"),
+                    rs.getString("nickname"),
+                    rs.getString("nombre_real"),
+                    rs.getDate("fecha_nacimiento"),
+                    rs.getString("rol"),
+                    equipo,
+                    estadoTexto
+                });
+            }
+
+            tabla.setModel(modeloTabla);
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error al listar jugadores: " + e.getMessage(), e
+            );
+        }
+    }
+
+    public void modificarJugador(
+            int idJugador,
+            String nickname,
+            String nombreReal,
+            LocalDate fechaNacimiento,
+            String rol,
+            Integer idEquipo) {
+
+        String sql =
+                "{call gamestudents.sp_modificar_jugador(?,?,?,?,?,?)}";
+
+        ConexionBDD conectar = new ConexionBDD();
+
+        try (
+                Connection conexion = conectar.conectar();
+                CallableStatement cs = conexion.prepareCall(sql)) {
+
+            cs.setInt(1, idJugador);
+            cs.setString(2, nickname);
+            cs.setString(3, nombreReal);
+
+            if (fechaNacimiento != null) {
+                cs.setDate(
+                        4,
+                        java.sql.Date.valueOf(fechaNacimiento)
+                );
+            } else {
+                cs.setNull(4, Types.DATE);
+            }
+
+            cs.setString(5, rol);
+
+            if (idEquipo != null) {
+                cs.setInt(6, idEquipo);
+            } else {
+                cs.setNull(6, Types.INTEGER);
+            }
+
+            cs.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error al modificar jugador: " + e.getMessage(), e
+            );
+        }
+    }
+
+    public void inhabilitarJugador(int idJugador) {
+
+        String sql =
+                "{call gamestudents.sp_inhabilitar_jugador(?)}";
+
+        ConexionBDD conectar = new ConexionBDD();
+
+        try (
+                Connection conexion = conectar.conectar();
+                CallableStatement cs = conexion.prepareCall(sql)) {
+
+            cs.setInt(1, idJugador);
+            cs.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error al inhabilitar jugador: " + e.getMessage(), e
+            );
+        }
+    }
+
+    public void habilitarJugador(int idJugador) {
+
+        String sql =
+                "{call gamestudents.sp_habilitar_jugador(?)}";
+
+        ConexionBDD conectar = new ConexionBDD();
+
+        try (
+                Connection conexion = conectar.conectar();
+                CallableStatement cs = conexion.prepareCall(sql)) {
+
+            cs.setInt(1, idJugador);
+            cs.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error al habilitar jugador: " + e.getMessage(), e
+            );
+        }
+    }
+
+   public ArrayList<String[]> listarEquiposCombo() {
+
+    ArrayList<String[]> lista = new ArrayList<>();
+
+    String sql =
+            "{call gamestudents.sp_listar_equipos()}";
+
+    ConexionBDD conectar = new ConexionBDD();
+
+    try (
+            Connection conexion = conectar.conectar();
+            CallableStatement cs = conexion.prepareCall(sql);
+            ResultSet rs = cs.executeQuery()) {
+
+        while (rs.next()) {
+
+            String[] equipo = new String[2];
+
+            equipo[0] =
+                    String.valueOf(
+                            rs.getInt("codigo")
+                    );
+
+            equipo[1] =
+                    rs.getString("nombre");
+
+            lista.add(equipo);
         }
 
     } catch (SQLException e) {
-        e.printStackTrace();
+        throw new RuntimeException(
+                "Error al listar equipos: " + e.getMessage(), e
+        );
     }
 
     return lista;
 }
 
-@Override
-public String toString() {
-    return nickname;
-}
+
+    public ArrayList<String[]> listarJugadoresCombo() {
+
+        ArrayList<String[]> lista = new ArrayList<>();
+
+        String sql =
+                "{call gamestudents.sp_listar_jugadores()}";
+
+        ConexionBDD conectar = new ConexionBDD();
+
+        try (
+                Connection conexion = conectar.conectar();
+                CallableStatement cs = conexion.prepareCall(sql);
+                ResultSet rs = cs.executeQuery()) {
+
+            while (rs.next()) {
+
+                if (rs.getInt("estado") == 1) {
+
+                    String[] jugador = new String[2];
+
+                    jugador[0] =
+                            String.valueOf(
+                                    rs.getInt("id_jugador")
+                            );
+
+                    jugador[1] =
+                            rs.getString("nickname");
+
+                    lista.add(jugador);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error al listar jugadores: " + e.getMessage(), e
+            );
+        }
+
+        return lista;
+    }
+
+    public Jugador buscarJugadorPorUsuario(String usuario) {
+
+        String sql =
+                "SELECT "
+                + "j.id_jugador, "
+                + "j.nickname, "
+                + "j.nombre_real, "
+                + "j.fecha_nacimiento, "
+                + "j.rol, "
+                + "j.id_equipo, "
+                + "j.estado "
+                + "FROM gamestudents.usuario u "
+                + "INNER JOIN gamestudents.jugador j "
+                + "ON u.usuario = j.nickname "
+                + "WHERE u.usuario = ?";
+
+        ConexionBDD conectar = new ConexionBDD();
+
+        try (
+                Connection conexion = conectar.conectar();
+                PreparedStatement ps =
+                        conexion.prepareStatement(sql)) {
+
+            ps.setString(1, usuario);
+
+            try (ResultSet rs = ps.executeQuery()) {
+
+                if (rs.next()) {
+
+                    Jugador jugador = new Jugador();
+
+                    jugador.setIdJugador(
+                            rs.getInt("id_jugador")
+                    );
+
+                    jugador.setNickname(
+                            rs.getString("nickname")
+                    );
+
+                    jugador.setNombreReal(
+                            rs.getString("nombre_real")
+                    );
+
+                    java.sql.Date fecha =
+                            rs.getDate("fecha_nacimiento");
+
+                    if (fecha != null) {
+                        jugador.setFechaNacimiento(
+                                fecha.toLocalDate()
+                        );
+                    }
+
+                    jugador.setRol(
+                            rs.getString("rol")
+                    );
+
+                    Object equipo =
+                            rs.getObject("id_equipo");
+
+                    if (equipo != null) {
+                        jugador.setIdEquipo(
+                                rs.getInt("id_equipo")
+                        );
+                    }
+
+                    jugador.setEstado(
+                            rs.getInt("estado")
+                    );
+
+                    return jugador;
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(
+                    "Error al buscar jugador: " + e.getMessage(), e
+            );
+        }
+
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return nickname;
+    }
 }

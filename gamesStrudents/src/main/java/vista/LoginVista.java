@@ -48,68 +48,51 @@ public class LoginVista extends javax.swing.JFrame {
         txtUsuario = new javax.swing.JTextField();
         txtContrasena = new javax.swing.JPasswordField();
         btnIniciar = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        txtUsuario.setBackground(new java.awt.Color(234, 244, 255));
+        txtUsuario.setBackground(new java.awt.Color(184, 137, 67));
         txtUsuario.setFont(new java.awt.Font("Arial", 1, 12)); // NOI18N
-        txtUsuario.setForeground(new java.awt.Color(255, 255, 255));
+        txtUsuario.setForeground(new java.awt.Color(45, 32, 48));
         txtUsuario.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txtUsuario.setCaretColor(new java.awt.Color(230, 220, 200));
         txtUsuario.addActionListener(this::txtUsuarioActionPerformed);
 
-        txtContrasena.setBackground(new java.awt.Color(234, 244, 255));
+        txtContrasena.setBackground(new java.awt.Color(184, 137, 67));
         txtContrasena.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
-        txtContrasena.setForeground(new java.awt.Color(250, 250, 250));
+        txtContrasena.setForeground(new java.awt.Color(0, 0, 0));
         txtContrasena.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         txtContrasena.setCaretColor(new java.awt.Color(230, 220, 200));
 
-        btnIniciar.setBackground(new java.awt.Color(234, 244, 255));
+        btnIniciar.setBackground(new java.awt.Color(155, 110, 55));
         btnIniciar.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         btnIniciar.setForeground(new java.awt.Color(0, 0, 0));
         btnIniciar.setText("Iniciar Sesion");
         btnIniciar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnIniciar.addActionListener(this::btnIniciarActionPerformed);
 
-        jLabel1.setBackground(new java.awt.Color(230, 220, 200));
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(230, 220, 200));
-        jLabel1.setText("USUARIO:");
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(230, 220, 200));
-        jLabel2.setText("CONTRASEÑA:");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(209, 209, 209)
+                .addGap(211, 211, 211)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtContrasena)
-                    .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 193, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(232, Short.MAX_VALUE))
+                    .addComponent(txtContrasena, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                    .addComponent(btnIniciar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(230, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(235, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(261, Short.MAX_VALUE)
                 .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(35, 35, 35)
                 .addComponent(txtContrasena, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnIniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(207, 207, 207))
+                .addGap(204, 204, 204))
         );
 
         pack();
@@ -147,8 +130,6 @@ public class LoginVista extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnIniciar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPasswordField txtContrasena;
     private javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
@@ -160,11 +141,11 @@ class FondoPanel extends JPanel {
     public FondoPanel() {
 
         java.net.URL url =
-                getClass().getResource("/Imagenes/fondo.png");
+                getClass().getResource("/Imagenes/esta.jpg");
 
         if (url == null) {
 
-            System.out.println("❌ NO SE ENCONTRO portada2.png");
+            System.out.println("❌ NO SE ENCONTRO esta.jpg");
 
         } else {
 

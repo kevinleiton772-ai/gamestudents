@@ -1,80 +1,132 @@
 package controlador;
 
 import javax.swing.JOptionPane;
+
 import modelo.Login;
 import modelo.Menu;
+import modelo.Jugador;
+
 import vista.LoginVista;
 import vista.MenuVista;
 
 public class LoginControlador {
 
-    private Login umodelo;
-    private LoginVista uvista;
+    private Login modelo;
+    private LoginVista vista;
 
     public LoginControlador() {
     }
 
     public LoginControlador(
-            Login umodelo,
-            LoginVista uvista) {
+            Login modelo,
+            LoginVista vista) {
 
-        this.umodelo = umodelo;
-        this.uvista = uvista;
+        this.modelo = modelo;
+        this.vista = vista;
     }
 
-    public void recuperarUsuario() {
+    public void iniciar() {
+
+        vista.getBtnIniciarSesion().addActionListener(
+                e -> ingresar()
+        );
+
+        vista.setLocationRelativeTo(null);
+        vista.setVisible(true);
+    }
+
+    private void ingresar() {
 
         try {
 
             String usuario =
-                    uvista.getTxtUsuario();
+                    vista.getTxtUsuario()
+                            .trim();
 
             String contrasena =
-                    uvista.getTxtContrasena();
+                    vista.getTxtContrasena()
+                            .trim();
 
-            if (usuario == null ||
-                    usuario.trim().isEmpty()) {
+            if (usuario.isEmpty()
+                    || contrasena.isEmpty()) {
 
-                mensaje("Ingrese el usuario.");
+                JOptionPane.showMessageDialog(
+                        vista,
+                        "Ingrese usuario y contraseña.",
+                        "Advertencia",
+                        JOptionPane.WARNING_MESSAGE
+                );
+
                 return;
             }
 
-            if (contrasena == null ||
-                    contrasena.trim().isEmpty()) {
+            modelo.setUsuario(usuario);
+            modelo.setContrasena(contrasena);
 
-                mensaje("Ingrese la contraseña.");
+            boolean resultado =
+                    modelo.iniciarSesion();
+
+            if (!resultado) {
+
+                JOptionPane.showMessageDialog(
+                        vista,
+                        "Usuario o contraseña incorrectos.",
+                        "Error de inicio de sesión",
+                        JOptionPane.ERROR_MESSAGE
+                );
+
                 return;
             }
 
-            umodelo.setUsuario(
-                    usuario.trim()
-            );
+            String rol =
+                    modelo.getTipo();
 
-            umodelo.setContrasena(
-                    contrasena
-            );
+            if (rol == null) {
 
-            if (umodelo.iniciarSesion()) {
+                JOptionPane.showMessageDialog(
+                        vista,
+                        "No se pudo obtener el rol del usuario.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                );
 
-                uvista.dispose();
+                return;
+            }
+
+            rol = rol.trim();
+
+            
+
+            if (rol.equalsIgnoreCase("ADMIN")
+                    || rol.equalsIgnoreCase("ADMINISTRADOR")) {
 
                 abrirMenu();
 
+        
+
+            } else if (rol.equalsIgnoreCase("JUGADOR")) {
+
+//                abrirJugador();
+
             } else {
 
-                mensaje(
-                        "Usuario o contraseña incorrectos "
-                        + "o usuario inactivo."
+                JOptionPane.showMessageDialog(
+                        vista,
+                        "Rol de usuario no reconocido: "
+                        + rol,
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
                 );
-
-                uvista.setTxtContrasena("");
             }
 
         } catch (Exception e) {
 
-            mensaje(
+            JOptionPane.showMessageDialog(
+                    vista,
                     "Error al iniciar sesión:\n"
-                    + e.getMessage()
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
             );
 
             e.printStackTrace();
@@ -95,37 +147,25 @@ public class LoginControlador {
                     new menuControlador(
                             modeloMenu,
                             vistaMenu,
-                            null
+                            vista
                     );
+
+            vista.setVisible(false);
 
             controladorMenu.iniciar();
 
         } catch (Exception e) {
 
-            mensaje(
+            JOptionPane.showMessageDialog(
+                    vista,
                     "Error al abrir el menú:\n"
-                    + e.getMessage()
+                    + e.getMessage(),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
             );
 
             e.printStackTrace();
         }
     }
 
-    public void iniciar() {
-
-        uvista.getBtnIniciarSesion()
-                .addActionListener(
-                        e -> recuperarUsuario()
-                );
-
-        uvista.setVisible(true);
-    }
-
-    public void mensaje(String mensaje) {
-
-        JOptionPane.showMessageDialog(
-                null,
-                mensaje
-        );
-    }
 }
