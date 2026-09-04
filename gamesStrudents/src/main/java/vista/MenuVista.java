@@ -31,7 +31,9 @@ public class MenuVista extends javax.swing.JFrame {
      public JButton getBtnPartidos() {
     return btnPartidos;
 }
-
+    public JButton getBtnTorneos() {
+    return btnTorneos;
+}
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -40,7 +42,7 @@ public class MenuVista extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         btnJugadores = new javax.swing.JButton();
         btnEquipo = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        btnTorneos = new javax.swing.JButton();
         btnPartidos = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
@@ -73,7 +75,7 @@ public class MenuVista extends javax.swing.JFrame {
 
         btnEquipo.setText("Equipo");
 
-        jButton3.setText("jButton3");
+        btnTorneos.setText("Torneo");
 
         btnPartidos.setText("Partidos");
 
@@ -88,15 +90,14 @@ public class MenuVista extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(112, 112, 112)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(100, 100, 100)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btnEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnJugadores, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnPartidos, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(btnPartidos, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnTorneos, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -108,7 +109,7 @@ public class MenuVista extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addComponent(btnEquipo)
                 .addGap(29, 29, 29)
-                .addComponent(jButton3)
+                .addComponent(btnTorneos)
                 .addGap(18, 18, 18)
                 .addComponent(btnPartidos)
                 .addGap(18, 18, 18)
@@ -148,7 +149,7 @@ public class MenuVista extends javax.swing.JFrame {
     private javax.swing.JButton btnEquipo;
     private javax.swing.JButton btnJugadores;
     private javax.swing.JButton btnPartidos;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton btnTorneos;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel7;
